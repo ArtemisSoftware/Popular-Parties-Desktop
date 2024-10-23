@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import presentation.dashboard.DashboardScreen
 
 @Composable
 @Preview
@@ -26,6 +27,7 @@ fun App() {
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
-        App()
+        //App()
+        DashboardScreen()
     }
 }
