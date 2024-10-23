@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.onClick
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,16 +25,17 @@ import presentation.dashboard.models.DashboardOption
 @Composable
 internal fun OptionCard(
     option: DashboardOption,
-    onClick: (DashboardOption) -> Unit
+    onClick: (DashboardOption) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .onClick { onClick(option) },
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,  // Background color
-            contentColor = Color.Black     // Content color (text, etc.)
+            containerColor = Color.White,
+            contentColor = Color.Black
         ),
+        shape = RoundedCornerShape(4.dp),
         border = BorderStroke(1.dp, Color.Black)
     ) {
         Column (
@@ -59,6 +61,7 @@ internal fun OptionCard(
 @Composable
 private fun OptionCardPreview() {
     OptionCard(
+        modifier = Modifier.fillMaxWidth(),
         option = DashboardOption.AddEvent,
         onClick = {}
     )
