@@ -1,6 +1,6 @@
 package presentation.dashboard.models
 
-object DashboardOptions {
+internal object DashboardOptions {
     val options = listOf(
         DashboardOption.EventList,
         DashboardOption.AddEvent
