@@ -6,21 +6,16 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import core.ui.composables.topbar.PPTopBar
-
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import presentation.util.UrlUtil
-import java.io.IOException
+import presentation.addevent.composables.EventDetails
+import presentation.addevent.composables.HtmlViewer
 
 @Composable
 fun AddEventScreen(
     onNavigateBack: () -> Unit
 ) {
-    //HtmlViewer("https://www.example.com")
     AddEventContent(
         onNavigateBack = onNavigateBack
     )
@@ -41,45 +36,28 @@ private fun AddEventContent(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(innerPadding),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ){
-                EventDetails()
+                HtmlViewer(
+                    url = "https://www.coolture.pt/event/feira-da-luz-2024-carnide-lisboa/",
+                    onGetHtmlCode = {},
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                )
+
+                EventDetails(
+                    url = "https://www.coolture.pt/event/feira-da-luz-2024-carnide-lisboa/",
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    onGetHtmlCode = {
+                    }
+                )
             }
         }
     )
-}
-
-@Composable
-private fun EventDetails() {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            OutlinedTextField(
-                value = "",
-                label = { Text("Página web") },
-                onValueChange = {}
-            )
-
-            Button(
-                onClick = {
-                    loadUrl("https://www.coolture.pt/event/feira-da-luz-2024-carnide-lisboa/")
-                },
-                content = {
-                    Text("Validar")
-                }
-            )
-        }
-    }
-}
-
-private fun loadUrl(url: String){
-    UrlUtil.openUrl(url = url)
 }
 
 @Preview
@@ -90,29 +68,3 @@ private fun AddEventContentPreview() {
     )
 }
 
-@Preview
-@Composable
-private fun EventDetailsPreview() {
-    EventDetails()
-}
-/*
-val client = OkHttpClient()
-
-fun fetchHtmlWithOkHttp(url: String): String {
-    val request = Request.Builder().url(url).build()
-    client.newCall(request).execute().use { response ->
-        return if (!response.isSuccessful) throw IOException("Unexpected code $response") else response.body!!.string()
-    }
-}
-
-@Composable
-fun HtmlViewer(url: String) {
-    var htmlContent by remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        htmlContent = fetchHtmlWithOkHttp(url)
-    }
-
-    Text(text = if (htmlContent.isEmpty()) "Loading..." else htmlContent)
-}
-*/
