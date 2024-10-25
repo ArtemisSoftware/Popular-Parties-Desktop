@@ -12,17 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import presentation.dashboard.composables.OptionCard
+import presentation.dashboard.models.DashboardOption
 import presentation.dashboard.models.DashboardOptions
 
 @Composable
-fun DashboardScreen() {
-
-    DashboardContent()
+fun DashboardScreen(
+    navigateToAddEvent: () -> Unit
+) {
+    DashboardContent(
+        navigateToAddEvent = navigateToAddEvent
+    )
 }
 
 @Composable
-private fun DashboardContent() {
-
+private fun DashboardContent(
+    navigateToAddEvent: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +52,12 @@ private fun DashboardContent() {
 
                 OptionCard(
                     option = option,
-                    onClick = {},
+                    onClick = { item ->
+                        navigateTo(
+                            option = item,
+                            navigateToAddEvent = navigateToAddEvent,
+                        )
+                    },
                     Modifier.fillMaxWidth()
                 )
             }
@@ -55,8 +65,20 @@ private fun DashboardContent() {
     }
 }
 
+private fun navigateTo(
+    option: DashboardOption,
+    navigateToAddEvent: () -> Unit
+){
+    when(option){
+        DashboardOption.AddEvent -> navigateToAddEvent()
+        DashboardOption.EventList -> TODO()
+    }
+}
+
 @Preview
 @Composable
 private fun DashboardContentPreview() {
-    DashboardContent()
+    DashboardContent(
+        navigateToAddEvent = {}
+    )
 }
