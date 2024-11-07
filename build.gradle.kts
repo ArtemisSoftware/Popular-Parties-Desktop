@@ -23,6 +23,7 @@ dependencies {
     implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.6.11")
     implementation("org.jetbrains.compose.material3:material3-desktop:1.5.3")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("org.jsoup:jsoup:1.18.1")
 }
 
 compose.desktop {
