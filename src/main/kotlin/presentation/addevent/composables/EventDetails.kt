@@ -1,11 +1,10 @@
 package presentation.addevent.composables
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FindInPage
 import androidx.compose.material3.*
@@ -19,7 +18,11 @@ import core.ui.composables.button.PPCircularIconButton
 import domain.util.extensions.format
 import presentation.addevent.AddEventState
 import presentation.addevent.models.Event
+import presentation.addevent.models.Performance
+import presentation.util.ImageUtil.loadNetworkImage
 import presentation.util.UrlUtil
+
+
 
 @Composable
 internal fun EventDetails(
@@ -41,6 +44,15 @@ internal fun EventDetails(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                if(event.bannerUrl.isNotEmpty()) {
+                    Image(
+                        modifier = Modifier.size(200.dp),
+                        bitmap = loadNetworkImage(event.bannerUrl),
+                        contentDescription = ""
+                    )
+                }
+            }
             item {
                 Detail(
                     title = "Titulo",
@@ -104,6 +116,21 @@ internal fun EventDetails(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
+            item {
+                Text(
+                    text = "Performances",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.displaySmall,
+                )
+            }
+
+            items(event.performances){ item: Performance ->
+                Performance(
+                    performance = item,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -130,6 +157,43 @@ private fun Detail(
     }
 }
 
+@Composable
+private fun Performance(
+    performance: Performance,
+    modifier: Modifier = Modifier
+){
+    with(performance){
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            imageUrl?.let {
+                Image(
+                    modifier = Modifier.weight(1F),
+                    bitmap = loadNetworkImage(it),
+                    contentDescription = ""
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = artist,
+                    fontWeight = FontWeight.Light,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = date?.format() ?: "",
+                    fontSize = 16.sp,
+                )
+            }
+        }
+    }
+}
 
 @Preview
 @Composable
