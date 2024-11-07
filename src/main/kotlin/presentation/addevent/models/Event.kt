@@ -4,6 +4,7 @@ import domain.models.Coordinates
 import java.time.LocalDateTime
 
 data class Event(
+    val bannerUrl: String = "",
     val title: String = "",
     val startDate: LocalDateTime = LocalDateTime.now(),
     val endDate: LocalDateTime = LocalDateTime.now(),
@@ -13,4 +14,5 @@ data class Event(
     val extraInfo: String? = null,
     val price: String = "",
     val description: String = "",
+    val performances: List<Performance> = emptyList()
 )

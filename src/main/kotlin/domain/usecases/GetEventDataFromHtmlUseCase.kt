@@ -2,10 +2,13 @@ package domain.usecases
 
 import domain.models.Coordinates
 import domain.util.extensions.convertDmsToDecimal
+import domain.util.extensions.toEnglishLocalDateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import presentation.addevent.models.Event
 import domain.util.extensions.toLocalDateTime
+import org.jsoup.nodes.Element
+import presentation.addevent.models.Performance
 import java.time.LocalDateTime
 
 class GetEventDataFromHtmlUseCase {
@@ -16,6 +19,7 @@ class GetEventDataFromHtmlUseCase {
         val dates = getDate(document)
 
         return Event(
+            bannerUrl = getBanner(document),
             title = getTitle(document),
             startDate = dates.first,
             endDate = dates.second,
@@ -24,8 +28,14 @@ class GetEventDataFromHtmlUseCase {
             coordinates = getGpsCoordinates(document),
             extraInfo = getExtraInfo(document),
             price = getPrice(document),
-            description = getDescription(document)
+            description = getDescription(document),
+            performances = getPerformances(document, year = dates.first.year)
         )
+    }
+
+    private fun getBanner(document: Document): String {
+        val imgElement = document.select("div.image img").first()  // Select the first <img> tag
+        return imgElement?.attr("src") ?: ""  // Get the src attribute
     }
 
     private fun getTitle(document: Document): String {
@@ -73,5 +83,24 @@ class GetEventDataFromHtmlUseCase {
     private fun getDescription(document: Document): String {
         val description = document.select("div.event-des p strong").text()
         return description
+    }
+
+    private fun getPerformances(document: Document, year: Int): List<Performance> {
+        val list = mutableListOf<Performance>()
+
+        val performances = document.select("div.event-des h3:has(span) + h2")
+        performances.forEach { performance ->
+            val dateElement: Element? = performance.previousElementSibling()?.selectFirst("span")
+            val date = dateElement?.text() ?: "Date not found"
+
+            list.add(
+                Performance(
+                    date = date.toEnglishLocalDateTime(year),
+                    artist = performance.text(),
+                    imageUrl = performance.nextElementSibling()?.selectFirst("img")?.attr("src")
+                )
+            )
+        }
+        return list
     }
 }
